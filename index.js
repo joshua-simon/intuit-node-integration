@@ -37,6 +37,22 @@ app.get('/callback', function(req, res) {
 
 });
 
+app.get('/getCompanyInfo', (req,res) => {
+
+    let companyID = oauthClient.getToken().realmId;
+
+    let url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
+
+    oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
+        .then(function(authResponse){
+            console.log("The response for API call is :"+JSON.stringify(authResponse));
+            res.send(JSON.parse(authResponse.text()));
+        })
+        .catch(function(e) {
+            console.error(e);
+        });
+});
+
 
 
 app.listen(port, () => {
