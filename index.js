@@ -6,21 +6,22 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 let urlencodedParser = bodyParser.urlencoded({extended:true})
 let oauth2_token_json = null
 let oauthClient = null;
+
 
 app.get('/authUri', urlencodedParser, (req,res) => {
     oauthClient = new OAuthClient({
         clientId: "ABVilsiVh4HwrcrM4QaUO5lThBMTWUSrMfMItT00jLub7BZwnW",
         clientSecret: "3kZnYLeV08rVv7d2HaUkahRgUKbqvj7bA8zD9fLl",
         environment: "sandbox",
-        redirectUri:"http://localhost:3000/callback"
+        redirectUri:"http://localhost:3001/callback"
     })
     let authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state: 'testState'})
-    res.redirect(authUri)
+    res.send(authUri)
 })
 
 app.get('/callback', function(req, res) {
@@ -53,12 +54,10 @@ app.get('/getCompanyInfo', (req,res) => {
         });
 });
 
-
+app.get('/', (req,res) => {
+    res.send('hello from server')
+})
 
 app.listen(port, () => {
     console.log(`Server is listening on port: ${port}`)
-})
-
-app.get('/', (req,res) => {
-    res.send('hello from server')
 })
