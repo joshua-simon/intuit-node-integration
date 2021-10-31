@@ -1,48 +1,67 @@
+
+
 const express = require("express");
+const app = express();
 const OAuthClient = require("intuit-oauth");
 const bodyParser = require("body-parser");
 
-const app = express();
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-const port = process.env.PORT || 3001;
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-let urlencodedParser = bodyParser.urlencoded({ extended: true });
-let oauth2_token_json = null;
-let oauthClient = null;
+var oauth2_token_json = null,
+  redirectUri = "",
+  accessToken = "test";
 
-app.get("/authUri", urlencodedParser, (req, res) => {
+var oauthClient = null;
+
+app.get("/authUri", urlencodedParser, function (req, res) {
   oauthClient = new OAuthClient({
     clientId: "ABVilsiVh4HwrcrM4QaUO5lThBMTWUSrMfMItT00jLub7BZwnW",
     clientSecret: "3kZnYLeV08rVv7d2HaUkahRgUKbqvj7bA8zD9fLl",
     environment: "sandbox",
-    redirectUri: "http://localhost:3001/callback",
+    redirectUri: "http://localhost:8000/callback",
   });
-  let authUri = oauthClient.authorizeUri({
+
+  var authUri = oauthClient.authorizeUri({
     scope: [OAuthClient.scopes.Accounting],
-    state: "testState",
+    state: "intuit-test",
   });
   res.send(authUri);
 });
 
-app.get("/callback", function (req, res) {
+app.get("/callback", (req, res) => {
   oauthClient
     .createToken(req.url)
-    .then(function (authResponse) {
+    .then((authResponse) => {
       oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
+      let newToken = JSON.parse(oauth2_token_json);
+      accessToken = newToken.access_token;
+      res.redirect(`http://localhost:3000/companyInfo?token=${accessToken}`);
     })
-    .catch(function (e) {
+    .catch((e) => {
       console.error(e);
     });
-
-  res.redirect("http://localhost:3000/companyInfo");
 });
 
-app.get("/getCompanyInfo", (req, res) => {
-  let companyID = oauthClient.getToken().realmId;
+// app.get('/refreshAccessToken', function(req,res){
 
-  let url =
+//     oauthClient.refresh()
+//         .then(function(authResponse){
+//             console.log('The Refresh Token is  '+ JSON.stringify(authResponse.getJson()));
+//             oauth2_token_json = JSON.stringify(authResponse.getJson(), null,2);
+//             res.send(oauth2_token_json);
+//         })
+//         .catch(function(e) {
+//             console.error(e);
+//         });
+// });
+
+app.get("/getCompanyInfo", function (req, res) {
+  var companyID = oauthClient.getToken().realmId;
+
+  var url =
     oauthClient.environment == "sandbox"
       ? OAuthClient.environment.sandbox
       : OAuthClient.environment.production;
@@ -62,10 +81,8 @@ app.get("/getCompanyInfo", (req, res) => {
     });
 });
 
-app.get("/", (req, res) => {
-  res.send("hello from server");
-});
+const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
-  console.log(`Server is listening on port: ${port}`);
+const server = app.listen(port, () => {
+  console.log(`💻 Server listening on port ${port}`);
 });

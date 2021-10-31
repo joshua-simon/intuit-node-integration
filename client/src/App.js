@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import LandingPage from './pages/LandingPage'
 import CompanyInfo from './pages/CompanyInfo'
+import Main from './pages/Main'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import './styles.css'
 
 const App =() => {
   return (
     <Router>
       <div>
         <Switch>
-          <Route path = '/' exact component = {LandingPage}/>
-          <Route path = '/companyInfo' exact component = {CompanyInfo}/>
+          <Route path = '/' exact component = {Main}/>
+          <Route path = '/companyInfo' component = {CompanyInfo}/>
         </Switch>
       </div>
     </Router>

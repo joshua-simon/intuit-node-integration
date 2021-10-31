@@ -1,0 +1,25 @@
+@import url(//db.onlinewebfonts.com/c/05428692254b58ccb090358a3dfecfff?family=Sofia+Pro);
+@font-face {font-family: "Sofia Pro"; src: url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.eot"); src: url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.woff") format("woff"), url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/05428692254b58ccb090358a3dfecfff.svg#Sofia Pro") format("svg"); }
+
+
+body {
+    background-color:#f0f1f6;
+    font-family: Sofia Pro;
+    text-align:center;
+}
+
+a {
+ text-decoration: none;
+ cursor: pointer;
+ color:rgb(104, 98, 98); 
+ border: 1px;
+}
+
+p {
+    margin:10%;
+    border-radius: 5px;
+}
+
+.companyInfo{
+    color:rgb(104, 98, 98); 
+}
